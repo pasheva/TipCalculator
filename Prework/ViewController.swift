@@ -7,10 +7,10 @@
 
 import UIKit
 
-
+//For seving the status of the app before exiting.
 let defaults = UserDefaults.standard
 
-
+// Extending the class to be able to use hex codes fro colors.
 extension UIColor {
     public convenience init?(hex: String) {
         let r, g, b, a: CGFloat
@@ -74,6 +74,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        //Show keyboard on start.
         billField.becomeFirstResponder()
         lightColorSet()
         
@@ -81,16 +82,22 @@ class ViewController: UIViewController {
         billField.text = stringValue
         tipLabel.text = String(format: "$%.2f", defaults.double(forKey: "myDoubleTip"))
         totalLabel.text = String(format: "$%.2f", defaults.double(forKey: "myDoubleTotal"))
+        // Set to last precentage used by the user.
+        // In this way if one of the precentages is commanly used it will be already selected.
         tipControl.selectedSegmentIndex = defaults.integer(forKey: "myIndex")
+        // Set saved light/dark mode.
         let boolValue = defaults.bool(forKey: "modeBool")
         modeSwitch.isOn = boolValue
         darkAction(self)
     }
     
-    
+    //Setting dark or light mode deppending on the toggle. 
     @IBAction func darkAction(_ sender: Any) {
         defaults.set(modeSwitch.isOn, forKey: "modeBool")
-        if modeSwitch.isOn == true{
+        
+        if modeSwitch.isOn == true
+        {
+            //Dark mode set.
             view.backgroundColor = UIColor(hex: "#264653FF")
             
             billLabel.textColor = UIColor(hex: "#2a9d8fFF")
@@ -113,9 +120,14 @@ class ViewController: UIViewController {
             lightColorSet()
         }
     }
+    
+    
+    // On tap dismiss the keyboard.
     @IBAction func onTap(_ sender: Any) {
         view.endEditing(true)
     }
+    
+    
     @IBAction func calculateTip(_ sender: Any) {
         // Get bill amount
         let bill = Double(billField.text!) ?? 0
@@ -132,6 +144,7 @@ class ViewController: UIViewController {
         // Update lables
         tipLabel.text = String(format: "$%.2f", tip)
         totalLabel.text = String(format: "$%.2f", total)
+        
         
         defaults.synchronize()
     }
