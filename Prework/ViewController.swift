@@ -7,6 +7,10 @@
 
 import UIKit
 
+
+let defaults = UserDefaults.standard
+
+
 extension UIColor {
     public convenience init?(hex: String) {
         let r, g, b, a: CGFloat
@@ -71,7 +75,15 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         defColorSet()
+        let stringValue = defaults.string(forKey: "myString") ?? "Amount"
+        billField.text = stringValue
+        tipLabel.text = String(format: "$%.2f", defaults.double(forKey: "myDoubleTip"))
+        totalLabel.text = String(format: "$%.2f", defaults.double(forKey: "myDoubleTotal"))
+        tipControl.selectedSegmentIndex = defaults.integer(forKey: "myIndex")
+        
     }
+    
+    
     @IBAction func darkAction(_ sender: Any) {
         if modeSwitch.isOn == true{
             view.backgroundColor = UIColor(hex: "#264653FF")
@@ -102,14 +114,21 @@ class ViewController: UIViewController {
     @IBAction func calculateTip(_ sender: Any) {
         // Get bill amount
         let bill = Double(billField.text!) ?? 0
+        defaults.set(billField.text, forKey: "myString")
+        
         // Calculate tip perecentage and total
         let tipPercentages = [0.15,0.18,0.2]
         let tip = bill * tipPercentages[tipControl.selectedSegmentIndex]
         let total = bill + tip
+        defaults.set(tip, forKey: "myDoubleTip")
+        defaults.set(total, forKey: "myDoubleTotal")
+        defaults.set(tipControl.selectedSegmentIndex, forKey: "myIndex")
+        
         // Update lables
         tipLabel.text = String(format: "$%.2f", tip)
         totalLabel.text = String(format: "$%.2f", total)
         
+        defaults.synchronize()
     }
 }
 
