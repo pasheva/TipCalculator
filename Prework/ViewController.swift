@@ -52,7 +52,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var totalTextLabel: UILabel!
 
     
-    func defColorSet(){
+    func lightColorSet(){
     view.backgroundColor = UIColor(hex: "#e9c46aFF")
     
     billLabel.textColor = UIColor(hex: "#e76f51FF")
@@ -74,17 +74,22 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        defColorSet()
-        let stringValue = defaults.string(forKey: "myString") ?? "Amount"
+        billField.becomeFirstResponder()
+        lightColorSet()
+        
+        let stringValue = defaults.string(forKey: "myString")
         billField.text = stringValue
         tipLabel.text = String(format: "$%.2f", defaults.double(forKey: "myDoubleTip"))
         totalLabel.text = String(format: "$%.2f", defaults.double(forKey: "myDoubleTotal"))
         tipControl.selectedSegmentIndex = defaults.integer(forKey: "myIndex")
-        
+        let boolValue = defaults.bool(forKey: "modeBool")
+        modeSwitch.isOn = boolValue
+        darkAction(self)
     }
     
     
     @IBAction func darkAction(_ sender: Any) {
+        defaults.set(modeSwitch.isOn, forKey: "modeBool")
         if modeSwitch.isOn == true{
             view.backgroundColor = UIColor(hex: "#264653FF")
             
@@ -100,12 +105,12 @@ class ViewController: UIViewController {
             billField.backgroundColor = UIColor(hex: "#264653FF")
             
             
-            tipControl.backgroundColor = UIColor(hex: "#14213dff")
+            tipControl.backgroundColor = UIColor(hex: "#0096c7ff")
             tipControl.selectedSegmentTintColor = UIColor.white
             tipControl.setTitleTextAttributes( [NSAttributedString.Key.foregroundColor: UIColor(hex: "#2a9d8fFF")], for: .selected)
             
         }else{
-            defColorSet()
+            lightColorSet()
         }
     }
     @IBAction func onTap(_ sender: Any) {
